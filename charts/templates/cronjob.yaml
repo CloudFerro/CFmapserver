@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: "{{ .Release.Name }}-cronjob"
+  namespace: {{ .Release.Namespace }}
+spec:
+  concurrencyPolicy: Forbid
+  schedule: '{{ .Values.cronJobSchedule }}'
+  jobTemplate:
+    spec:
+      backoffLimit: 2 # prompt kubernetes to schedule new replica set for the deployment
+      activeDeadlineSeconds: 600 # timeout
+      template:
+        spec:
+          serviceAccountName: {{ .Release.Name }}
+          restartPolicy: Never
+          containers:
+            - name: kubectl
+              image: bitnami/kubectl #enables rollout
+              command:
+                - 'kubectl'
+                - 'rollout'
+                - 'restart'
+                - 'deployment/mapserver'

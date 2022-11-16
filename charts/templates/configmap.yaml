@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Release.Name }}-configmap"
+  namespace: {{ .Release.Namespace }}
+data:
+  S3_MAPS_HOST: {{ .Values.s3Maps.host }}
+  S3_MAPS_BUCKET: {{ .Values.s3Maps.bucket }}
+  S3_GEO_HOST: {{ .Values.s3Geo.host }}
+  S3_GEO_BUCKET: {{ .Values.s3Geo.bucket }}

@@ -1,0 +1,25 @@
+# allow getting status and patching the deployment
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: "{{ .Release.Name }}-role"
+  namespace: {{ .Release.Namespace }}
+rules:
+  - apiGroups: ["apps", "extensions"]
+    resources: ["deployments"]
+    resourceNames: ["mapserver"]
+    verbs: ["get", "patch", "list", "watch"]
+---
+# bind the role to the service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "{{ .Release.Name }}-rolebinding"
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: "{{ .Release.Name }}-role"
+subjects:
+  - kind: ServiceAccount
+    name: "{{ .Release.Name }}-sa"

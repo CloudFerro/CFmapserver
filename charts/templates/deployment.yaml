@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-deployment"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        envFrom:
+        - secretRef:
+            name: "{{ .Release.Name }}-secret"
+        - configMapRef:
+            name: "{{ .Release.Name }}-configmap"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        volumeMounts:
+        - name: "{{ .Release.Name }}-volume"
+          mountPath: {{ .Values.image.mapFilesPath }}
+          readOnly: true
+      initContainers:
+      - name: "{{ .Release.Name }}-init"
+        image: "{{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}"
+        envFrom:
+        - secretRef:
+            name: "{{ .Release.Name }}-secret"
+        - configMapRef:
+            name: "{{ .Release.Name }}-configmap"
+        volumeMounts:
+        - name: "{{ .Release.Name }}-volume"
+          mountPath: "/work-dir"
+      volumes:
+      - name: "{{ .Release.Name }}-volume"
+        emptyDir: {}
