@@ -1,4 +1,4 @@
-# CFMapserver
+# CFmapserver
 
 CFmapserver is a wrapper utility for deploying [MapServer](https://mapserver.org/about.html#aboutMapServer) on Kubernetes, and enabling automated synchronization of mapfiles from S3.
 
