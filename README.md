@@ -1,11 +1,11 @@
 # CFMapserver
 
-CFmapserver is a wrapper utility for deploying [MapServer](https://mapserver.org/about.html#aboutMapServer) on Kubernetes, and enabling automated updates of its mapfile sources.
+CFmapserver is a wrapper utility for deploying [MapServer](https://mapserver.org/about.html#aboutMapServer) on Kubernetes, and enabling automated synchronization of mapfiles from S3.
 
 ## How it works
 
 CFmapserver is available as a [Helm](https://helm.sh/) chart, which enables deploying MapServer instances on Kubernetes with minimum configuration.
-MapServer instances get deployed as a containers and serve map files from `/etc/mapserver` folder. The contents of this folder are populated based on the contents of your S3 bucket. 
+MapServer instances get deployed as a containers and serve map files from their `/etc/mapserver` folder. The contents of this folder are populated based on the contents of an S3 bucket. 
 If the map files in the buckets change (e.g. are added, deleted or updated), a Kubernetes cronjob will periodically update the `/etc/mapserver` contents as well.
 
 ## Prerequisites
@@ -89,12 +89,12 @@ The sequence described above takes place the first time when CFmapserver is depl
 The init container script can be substituted by any other script, performing custom logic e.g. applying custom changes to mapfiles prior to loading them to MapServer, pulling from different source, setting other environment variables etc. To apply such customization, you can create a custom Docker image containing a modified script and place it in a Docker repository. Then point to this image in the `values.yaml` (`initImage.repository` and `initImage.tag` values).
 
 The caveats about the custom init script:
-* The script will have access to the environment variables provided in `values.yaml` (S3_MAPS_HOST, S3_MAPS_BUCKET, S3_MAPS_ACCESS_KEY, S3_MAPS_SECRET_KEY)
-* The script upon running should re it should upload mapfiles to this location
+* The script will have access to the environment variables provided in `values.yaml` s3Maps section(S3_MAPS_HOST, S3_MAPS_BUCKET, S3_MAPS_ACCESS_KEY, S3_MAPS_SECRET_KEY)
+* The script should ensure the required mapfiles in s3Maps bucket are up to date
 
 ## Accessing protected data in S3 buckets
 
 Mapfiles could point to protected geospatial data in S3 buckets (e.g. tiff images, .vrt files), where authentication using EC2 keypair is required (access key, secret key).
 The keys provided in the S3Maps bucket, do not directly cater for this use case.
 
-To access geo data in private buckets, the initialization script should be ammended to use [VSIS3](https://gdal.org/user/virtual_file_systems.html#vsis3-aws-s3-files). The S3 keys should then be separately provided to VSIS3 driver either via configuration file, config section in map files or via required environment variables.
+To access geo data in private buckets, the initialization script should be ammended and resources should use [VSIS3](https://gdal.org/user/virtual_file_systems.html#vsis3-aws-s3-files). The S3 keys should be provided to VSIS3 driver in the containers either via configuration file, config section in map files or via required environment variables.
