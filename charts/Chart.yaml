@@ -1,12 +1,8 @@
 apiVersion: v2
 name: CFmapserver
 description: >
-  A Helm chart to deploy the MapServer on a Kubernetes cluster in the CloudFerro cloud, based on camptocamp/mapserver Docker image. 
-  Automatically refreshes mapfiles from S3 bucket contents, in a time interval provided in the cron format.
+  MapServer on K8S with automated refresh of mapfiles from S3.
 
 type: application
 
-# chart version
 version: 0.1.0
-
-appVersion: "0.1.0"

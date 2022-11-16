@@ -6,5 +6,3 @@ metadata:
 data:
   S3_MAPS_HOST: {{ .Values.s3Maps.host }}
   S3_MAPS_BUCKET: {{ .Values.s3Maps.bucket }}
-  S3_GEO_HOST: {{ .Values.s3Geo.host }}
-  S3_GEO_BUCKET: {{ .Values.s3Geo.bucket }}

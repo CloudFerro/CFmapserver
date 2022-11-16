@@ -10,8 +10,8 @@ s3Maps:
 s3Geo:
   host: 'https://s3.waw3-1.cloudferro.com'
   bucket: ''
-  accessKey: ""
-  secretKey: ""
+  accessKey: ''
+  secretKey: ''
 
 # cron job schedule in cron format
 cronJobSchedule: '0 0 * * *' # the default runs once a day at midnight
@@ -20,7 +20,7 @@ cronJobSchedule: '0 0 * * *' # the default runs once a day at midnight
 image:
   repository: camptocamp/mapserver
   tag: '7.6-20-04'
-  mapFilesPath: "\\etc\\mapserver"
+  mapFilesPath: '/etc/mapserver'
 
 # Init container image settings
 initImage:
