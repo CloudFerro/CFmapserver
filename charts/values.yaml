@@ -7,12 +7,6 @@ s3Maps:
   accessKey: ''
   secretKey: ''
 
-s3Geo:
-  host: 'https://s3.waw3-1.cloudferro.com'
-  bucket: ''
-  accessKey: ''
-  secretKey: ''
-
 # cron job schedule in cron format
 cronJobSchedule: '0 0 * * *' # the default runs once a day at midnight
 

@@ -5,8 +5,8 @@ CFmapserver is a wrapper utility for deploying [MapServer](https://mapserver.org
 ## How it works
 
 CFmapserver is available as a [Helm](https://helm.sh/) chart, which enables deploying MapServer instances on Kubernetes with minimum configuration.
-MapServer instances get deployed as a containers and serve map files from their `/etc/mapserver` folder. The contents of this folder are populated based on the contents of an S3 bucket. 
-If the map files in the buckets change (e.g. are added, deleted or updated), a Kubernetes cronjob will periodically update the `/etc/mapserver` contents as well.
+MapServer instances get deployed as containers and serve map files from their `/etc/mapserver` folder. The contents of this folder are populated based on the contents of your S3 bucket. 
+If the map files in the bucket change (e.g. are added, deleted or updated), a Kubernetes cronjob will periodically update the `/etc/mapserver` contents as well.
 
 ## Prerequisites
 * A running Kubernetes cluster (e.g. on CloudFerro WAW3-1 cloud, with integrated EO data repository) -> [CloudFerro Kubernetes on Magnum installation guide](https://creodias.docs.cloudferro.com/en/latest/kubernetes/How-to-Create-a-Kubernetes-Cluster-Using-Creodias-OpenStack-Magnum.html)
@@ -35,10 +35,10 @@ wget https://raw.githubusercontent.com/PoulTur/cfmapserver/main/charts/values.ya
 ```
 
 
-Install the chart. We are adding here the custom flags `--namespace` and `--create-namespace` in order to have all artifacts contained in a dedicated namespace. You could skip these flags to install into the default namespace.
+Install the chart. We are adding the custom flags `--namespace` and `--create-namespace` in order to have all artifacts contained in a dedicated namespace. You could skip these flags to install into the default namespace.
 
 ```
-helm install cfmapserver cfmapserver/CFmapserver -f custom-values.yaml --namespace cfmapserver --create-namespace
+helm install cfmapserver cfmapserver/CFmapserver -f my-values.yaml --namespace cfmapserver --create-namespace
 ```
 
 Check that the service is running:
@@ -50,7 +50,7 @@ kubectl get services -n cfmapserver
 After a couple minutes you should see a public IP assigned to service. Verify that mapserver is running e.g. by typing:
 
 ```
-http://<your-public-ip>/?map=/etc/mapserver/<your-mapfile.map>&service=WMS&request=GetCapabilities
+http://<your-service-public-ip>/?map=/etc/mapserver/<your-mapfile.map>&service=WMS&request=GetCapabilities
 ```
 
 
