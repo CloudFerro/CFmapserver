@@ -80,7 +80,7 @@ The following table lists the configurable parameters of the template Helm chart
 | `autoscaling.maxReplicas`  | Max # of MapServer instances (if autoscaling is enabled)                                              | 10 |
 
 
-## Customizing the MapServer initialization script
+## Customizing the initialization script
 
 Prior to deploying each MapServer container by CFmapserver, an initialization script runs in a separate [Kubernetes initContainer](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/). The [default script](https://raw.githubusercontent.com/PoulTur/cfmapserver/main/init/mapserver-init.py) checks for the contents of the S3 bucket defined in `values.yaml`, pulls the files with `.map` extension and copies them to the mounted `/etc/mapserver` folder. This folder is then mounted to the MapServer container as well, thus the mapfiles from S3 get synced to MapServer.
 
