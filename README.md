@@ -21,13 +21,6 @@ Add repository locally:
 helm repo add cfmapserver https://PoulTur.github.io/cfmapserver/charts
 ```
 
-
-Verify the repo was added:
-
-```
-helm search repo
-```
-
 Create a customization file `my-values.yaml` by pulling the default file, then edit this file. At minimum, fill in the S3 coordinates (name of your bucket and S3 credentials). You can override other default values, in line with the configuration guidelines.
 
 ```
@@ -47,7 +40,7 @@ Check that the service is running:
 kubectl get services -n cfmapserver
 ```
 
-After a couple minutes you should see a public IP assigned to service. Verify that mapserver is running e.g. by typing:
+After few minutes you should see a public IP assigned to service. Verify that MapServer is running e.g. by typing:
 
 ```
 http://<your-service-public-ip>/?map=/etc/mapserver/<your-mapfile.map>&service=WMS&request=GetCapabilities
