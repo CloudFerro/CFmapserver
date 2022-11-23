@@ -75,7 +75,7 @@ The following table lists the configurable parameters of the template Helm chart
 
 ## Customizing the initialization script
 
-Prior to deploying each MapServer container by CFmapserver, an initialization script runs in a separate [Kubernetes initContainer](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/). The [default script](https://raw.githubusercontent.com/PoulTur/cfmapserver/main/init/mapserver-init.py) checks for the contents of the S3 bucket defined in `values.yaml`, pulls the files with `.map` extension and copies them to the mounted `/etc/mapserver` folder. This folder is then mounted to the MapServer container as well, thus the mapfiles from S3 get synced to MapServer.
+Prior to deploying each MapServer container by CFmapserver, an initialization script runs in a separate [Kubernetes initContainer](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/). The [default script](https://raw.githubusercontent.com/PoulTur/cfmapserver/main/init/mapserver-init.py) checks for the contents of the S3 bucket defined in `values.yaml`, pulls the files with `.map` extension and copies them to the mounted `/work-dir` folder. This folder is then mounted to the MapServer container in `/etc/mapserver` path, thus the mapfiles from S3 get synced to MapServer.
 
 The sequence described above takes place the first time when CFmapserver is deployed. Then, a cronjob running on the cluster, reinitiates this sequence periodically on a specified time interval. 
 
@@ -83,7 +83,7 @@ The init container script can be substituted by any other script, performing cus
 
 The caveats about the custom init script:
 * The script will have access to the environment variables provided in `values.yaml` s3Maps section(S3_MAPS_HOST, S3_MAPS_BUCKET, S3_MAPS_ACCESS_KEY, S3_MAPS_SECRET_KEY)
-* The script should ensure the required mapfiles in s3Maps bucket are up to date
+* The script should ensure the required mapfiles in s3Maps bucket are up to date (placed in `/work-dir` path in initContainer)
 
 ## Accessing protected data in S3 buckets
 
