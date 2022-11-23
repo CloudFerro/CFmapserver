@@ -21,4 +21,4 @@ spec:
                 - 'kubectl'
                 - 'rollout'
                 - 'restart'
-                - 'deployment/mapserver'
+                - 'deployment/{{ .Release.Name }}-deployment'
