@@ -12,7 +12,7 @@ spec:
       activeDeadlineSeconds: 600 # timeout
       template:
         spec:
-          serviceAccountName: {{ .Release.Name }}
+          serviceAccountName: "{{ .Release.Name }}-sa"
           restartPolicy: Never
           containers:
             - name: kubectl
