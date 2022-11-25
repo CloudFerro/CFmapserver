@@ -12,40 +12,47 @@ If the map files in the bucket change (e.g. are added, deleted or updated), a Ku
 * A running Kubernetes cluster (e.g. on CloudFerro WAW3-1 cloud, with integrated EO data repository) -> [CloudFerro Kubernetes on Magnum installation guide](https://creodias.docs.cloudferro.com/en/latest/kubernetes/How-to-Create-a-Kubernetes-Cluster-Using-Creodias-OpenStack-Magnum.html)
 * kubectl installed -> [Install kubectl on Linux](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
 * Helm installed -> [Installing Helm](https://helm.sh/docs/intro/install/)
-* An S3 bucket with credentials, where a sample mapfile is stored -> [CloudFerro guideline, EC2 keys generation](https://creodias.docs.cloudferro.com/en/latest/general/How-to-generate-ec2-credentials-on-Creodias.html?highlight=generate%20s3)
+* An S3 bucket with credentials for storing mapfiles -> [CloudFerro guideline, EC2 keys generation](https://creodias.docs.cloudferro.com/en/latest/general/How-to-generate-ec2-credentials-on-Creodias.html?highlight=generate%20s3)
 
 ## How to use this chart?
-Add repository locally:
+* Add repository locally:
 
-```
-helm repo add cfmapserver https://PoulTur.github.io/cfmapserver/charts
-```
+    ```
+    helm repo add cfmapserver https://CloudFerro.github.io/cfmapserver/charts
+    ```
 
-Create a customization file `my-values.yaml` by pulling the default file, then edit this file. At minimum, fill in the S3 coordinates (name of your bucket and S3 credentials). You can override other default values, in line with the configuration guidelines.
+* Create a customization file `my-values.yaml` by pulling the default file, then edit this file. At minimum, fill in the S3 coordinates (name of your bucket and S3 credentials). You can override other default values, in line with the configuration guidelines.
 
-```
-wget https://raw.githubusercontent.com/PoulTur/cfmapserver/main/charts/values.yaml -O my-values.yaml
-```
+    ```
+    wget https://raw.githubusercontent.com/CloudFerro/cfmapserver/main/charts/values.yaml -O my-values.yaml
+    ```
 
 
-Install the chart. We are adding the custom flags `--namespace` and `--create-namespace` in order to have all artifacts contained in a dedicated namespace. You could skip these flags to install into the default namespace.
+* Install the chart. We use optional custom flags `--namespace` and `--create-namespace` in order to have all artifacts contained in a dedicated namespace.
 
-```
-helm install cfmapserver cfmapserver/CFmapserver -f my-values.yaml --namespace cfmapserver --create-namespace
-```
+    ```
+    helm install cfmapserver cfmapserver/CFmapserver -f my-values.yaml --namespace cfmapserver --create-namespace
+    ```
 
-Check that the service is running:
+* Check that the service is running. The public IP assignment will take a couple minutes:
 
-```
-kubectl get services -n cfmapserver
-```
+    ```
+    kubectl get services -n cfmapserver
+    ```
 
-After few minutes you should see a public IP assigned to service. Verify that MapServer is running e.g. by typing:
+* Place the mapfiles to your S3 bucket. You can update the mapfiles to point to the public IP of the Kubernetes service in the wms_onlineresource or keep `localhost`. After apx. a minute (the default cronjob schedule) after placing a mapfile in bucket , it gets served by MapServer.
 
-```
-http://<your-service-public-ip>/?map=/etc/mapserver/<your-mapfile.map>&service=WMS&request=GetCapabilities
-```
+  You can verify that a mapfile is being served e.g. by typing:
 
+    ```
+    http://<your-service-public-ip>/?map=/etc/mapserver/<your-mapfile.map>&service=WMS&request=GetCapabilities
+    ```
+
+* Update the cronjob schedule, using cron format to match your needs. E.g. the below changes the cronjob to run everyday at midnight:
+
+    ```
+    kubectl patch cronjob cfmapserver-cronjob -p '{"spec":{"schedule": "0 0 * * *"}}'
+    ```
 
 ## Configuration guidelines
 
@@ -57,12 +64,12 @@ The following table lists the configurable parameters of the template Helm chart
 | `s3Maps.bucket`            | S3 bucket for map files (please store mapfiles directly in this S3 bucket, use of folders is currently not supported with the default setup)        | ``     |
 | `s3Maps.accessKey`         | S3 access key for map files                                 | ``                                                         |
 | `s3Maps.secretKey`         | S3 secret key for map files                                  | ``                                                         |
-| `cronJobSchedule`          | Synchronization schedule between S3 bucket and map files path, in cron format (default is daily at midnight)  | `0 0 * * *`  |
+| `cronJobSchedule`          | Synchronization schedule between S3 bucket and map files path, in cron format (default is every minute)  | `* * * * *`  |
 | `image.repository`         | Repository of MapServer Docker image            | `camptocamp\mapserver`                                     | 
 | `image.tag`                | Version/Tag of MapServer image                  | `7.6-20-04`                                                |
-| `image.mapFilesPath`       | Path to serve map files ((do not change if using the default MapServer image)    | `/etc/mapserver` |
-| `initImage.repository`     | Repository with Docker image of the initContainer used for syncing mapfiles | `paultur\mapserver-init`  |
-| `initImage.tag`            | Tag of the initContainer image                  | `0.1.0`
+| `image.mapFilesPath`       | Path to serve map files (do not change if using the default MapServer image)    | `/etc/mapserver` |
+| `initImage.repository`     | Repository with Docker image of the initContainer used for syncing mapfiles | `cfro\mapserver-init`  |
+| `initImage.tag`            | Tag of the initContainer image                  | `0.1.1`
 | `service.type`             | Kubernetes service type exposing port           | `LoadBalancer`                                             |
 | `service.port`             | TCP Port for this service                       | 80                                                         |
 | `resources.limits.memory`  | Pod memory resource limits in MiB (1Mi = 1 MiB)       | `1024Mi`                                |

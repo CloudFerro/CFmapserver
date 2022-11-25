@@ -8,7 +8,7 @@ s3Maps:
   secretKey: ''
 
 # cron job schedule in cron format
-cronJobSchedule: '0 0 * * *' # the default runs once a day at midnight
+cronJobSchedule: '* * * * *' # the default refreshes every minute
 
 # MapServer Docker image setting
 image:
@@ -18,7 +18,7 @@ image:
 
 # Init container image settings
 initImage:
-  repository: paultur/mapserver-init
+  repository: cfro/mapserver-init
   tag: '0.1.1'
 
 # Service settings
