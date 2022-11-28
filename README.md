@@ -18,7 +18,7 @@ If the map files in the bucket change (e.g. are added, deleted or updated), a Ku
 * Add repository locally:
 
     ```
-    helm repo add cfmapserver https://CloudFerro.github.io/cfmapserver/charts
+    helm repo add cfmapserver https://cloudferro.github.io/CFmapserver/charts
     ```
 
 * Create a customization file `my-values.yaml` by pulling the default file, then edit this file. At minimum, fill in the S3 coordinates (name of your bucket and S3 credentials). You can override other default values, in line with the configuration guidelines.
