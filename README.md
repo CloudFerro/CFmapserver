@@ -51,7 +51,7 @@ If the map files in the bucket change (e.g. are added, deleted or updated), a Ku
 * Update the cronjob schedule, using cron format to match your needs. E.g. the below changes the cronjob to run everyday at midnight:
 
     ```
-    kubectl patch cronjob cfmapserver-cronjob -p '{"spec":{"schedule": "0 0 * * *"}}'
+    kubectl patch cronjob -n cfmapserver cfmapserver-cronjob -p '{"spec":{"schedule": "0 0 * * *"}}'
     ```
 
 ## Configuration guidelines
