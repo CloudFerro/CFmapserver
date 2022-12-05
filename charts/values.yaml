@@ -8,7 +8,7 @@ s3Maps:
   secretKey: ''
 
 # cron job schedule in cron format
-cronJobSchedule: '* * * * *' # the default refreshes every minute
+cronJobSchedule: '0 0 * * *' # the default refreshes every minute
 
 # MapServer Docker image setting
 image:

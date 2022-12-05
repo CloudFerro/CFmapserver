@@ -13,8 +13,10 @@ If the map files in the bucket change (e.g. are added, deleted or updated), a Ku
 * kubectl installed -> [Install kubectl on Linux](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
 * Helm installed -> [Installing Helm](https://helm.sh/docs/intro/install/)
 * An S3 bucket with credentials for storing mapfiles -> [CloudFerro guideline, EC2 keys generation](https://creodias.docs.cloudferro.com/en/latest/general/How-to-generate-ec2-credentials-on-Creodias.html?highlight=generate%20s3)
+  Mapfiles should point to `localhost` in the `wms_onlineresource` section, which will get resolved in the containers.
 
 ## How to use this chart?
+
 * Add repository locally:
 
     ```
@@ -40,18 +42,10 @@ If the map files in the bucket change (e.g. are added, deleted or updated), a Ku
     kubectl get services -n cfmapserver
     ```
 
-* Place the mapfiles to your S3 bucket. You can update the mapfiles to point to the public IP of the Kubernetes service in the wms_onlineresource or keep `localhost`. After apx. a minute (the default cronjob schedule) after placing a mapfile in bucket , it gets served by MapServer.
-
   You can verify that a mapfile is being served e.g. by typing:
 
     ```
     http://<your-service-public-ip>/?map=/etc/mapserver/<your-mapfile.map>&service=WMS&request=GetCapabilities
-    ```
-
-* Update the cronjob schedule, using cron format to match your needs. E.g. the below changes the cronjob to run everyday at midnight:
-
-    ```
-    kubectl patch cronjob -n cfmapserver cfmapserver-cronjob -p '{"spec":{"schedule": "0 0 * * *"}}'
     ```
 
 ## Configuration guidelines
@@ -64,7 +58,7 @@ The following table lists the configurable parameters of the template Helm chart
 | `s3Maps.bucket`            | S3 bucket for map files (please store mapfiles directly in this S3 bucket, use of folders is currently not supported with the default setup)        | ``     |
 | `s3Maps.accessKey`         | S3 access key for map files                                 | ``                                                         |
 | `s3Maps.secretKey`         | S3 secret key for map files                                  | ``                                                         |
-| `cronJobSchedule`          | Synchronization schedule between S3 bucket and map files path, in cron format (default is every minute)  | `* * * * *`  |
+| `cronJobSchedule`          | Synchronization schedule between S3 bucket and map files path, in cron format (default is every day at midnight)  | `0 0 * * *`  |
 | `image.repository`         | Repository of MapServer Docker image            | `camptocamp\mapserver`                                     | 
 | `image.tag`                | Version/Tag of MapServer image                  | `7.6-20-04`                                                |
 | `image.mapFilesPath`       | Path to serve map files (do not change if using the default MapServer image)    | `/etc/mapserver` |
@@ -79,6 +73,13 @@ The following table lists the configurable parameters of the template Helm chart
 | `autoscaling.minReplicas`  | Min # of MapServer instances (if autoscaling is enabled)                                             | 1 |
 | `autoscaling.maxReplicas`  | Max # of MapServer instances (if autoscaling is enabled)                                              | 10 |
 
+In the testing phase you might want to adjust the frequency of the cronjob refresh to trigger more frequent uploads from S3. E.g. the below changes the already deployed cronjob to run every minute.
+
+    ```
+    kubectl patch cronjob -n cfmapserver cfmapserver-cronjob -p '{"spec":{"schedule": "* * * * *"}}'
+    ```
+
+Similarly, one can patch other resources in the already running deployment.
 
 ## Customizing the initialization script
 
