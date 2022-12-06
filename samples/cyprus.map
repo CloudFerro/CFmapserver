@@ -1,0 +1,47 @@
+MAP
+    NAME "Cyprus"
+
+    CONFIG "AWS_S3_ENDPOINT" "s3.waw3-1.cloudferro.com"
+    CONFIG "AWS_ACCESS_KEY_ID" "XXXX"
+    CONFIG "AWS_SECRET_ACCESS_KEY" "XXXX"
+    CONFIG "AWS_HTTPS" "YES"
+    CONFIG "AWS_VIRTUAL_HOSTING" "FALSE"
+    CONFIG "AWS_DEFAULT_REGION" "RegionOne"
+    CONFIG "AWS_REQUEST_PAYER" "requester"
+
+    # CONFIG "MS_ERRORFILE" "/etc/mapserver/error.map"
+
+    EXTENT -20037508.34 -20048966.1 20037508.34 20048966.1
+    UNITS METERS
+    SIZE 256 256
+    IMAGETYPE PNG
+    SHAPEPATH "/data/"
+    PROJECTION
+        "init=epsg:3857"
+    END
+    WEB
+        IMAGEPATH "/tmp/"
+        IMAGEURL "/tmp/"
+        METADATA
+          "wms_title"           "Cyprus in August"
+          # "wms_onlineresource"  "http://localhost:80/?map=/etc/mapserver/cyprus.map"
+          "wms_srs"             "EPSG:3857"
+          "wms_enable_request"  "*"
+          "wms_server_version" "1.3.0"
+          "wms_feature_info_mime_type" "text/html"
+          "wms_include_items" "all"
+          "wms_getcapabilities_version" "1.3.0"
+          #"wms_allow_getmap_without_styles" "true"
+        END
+    END
+    LAYER
+        NAME "Cyprus"
+        TYPE RASTER
+        STATUS ON
+        # DATA "/vsiscurl/https://s3.waw3-1.cloudferro.com/swift/v1/cfmapserver-2468/Cyprus_nb.tif"
+        DATA "/vsis3/cfmapserver-2468/Cyprus_nb.tif"
+        PROJECTION
+            "init=epsg:3857"
+        END
+    END
+END
