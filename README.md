@@ -74,9 +74,9 @@ The following table lists the configurable parameters of the template Helm chart
 
 In the testing phase you might want to adjust the frequency of the cronjob refresh to trigger more frequent uploads from S3. E.g. the below changes the already deployed cronjob to run every minute.
 
-    ```
-    kubectl patch cronjob cfmapserver-cronjob -p '{"spec":{"schedule": "* * * * *"}}'
-    ```
+  ```
+  kubectl patch cronjob cfmapserver-cronjob -p '{"spec":{"schedule": "* * * * *"}}'
+  ```
 
 Similarly, one can patch other resources in the already running deployment.
 
