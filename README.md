@@ -29,16 +29,16 @@ If the map files in the bucket change (e.g. are added, deleted or updated), a Ku
     ```
 
 
-* Install the chart. We use optional custom flags `--namespace` and `--create-namespace` in order to have all artifacts contained in a dedicated namespace.
+* Install the chart:
 
     ```
-    helm install cfmapserver cfmapserver/CFmapserver -f my-values.yaml --namespace cfmapserver --create-namespace
+    helm install cfmapserver cfmapserver/CFmapserver -f my-values.yaml
     ```
 
 * Check that the service is running. The public IP assignment will take a couple minutes:
 
     ```
-    kubectl get services -n cfmapserver
+    kubectl get services
     ```
 
   You can verify that a mapfile is being served e.g. by typing:
@@ -75,7 +75,7 @@ The following table lists the configurable parameters of the template Helm chart
 In the testing phase you might want to adjust the frequency of the cronjob refresh to trigger more frequent uploads from S3. E.g. the below changes the already deployed cronjob to run every minute.
 
     ```
-    kubectl patch cronjob -n cfmapserver cfmapserver-cronjob -p '{"spec":{"schedule": "* * * * *"}}'
+    kubectl patch cronjob cfmapserver-cronjob -p '{"spec":{"schedule": "* * * * *"}}'
     ```
 
 Similarly, one can patch other resources in the already running deployment.

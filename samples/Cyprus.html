@@ -55,7 +55,7 @@
 
 	const layerControl = L.control.layers(baseLayers, overlays).addTo(map);
 
-	var cpr = new L.tileLayer.wms("http://<service-public-ip>?map=/etc/mapserver/cyprus.map", {
+	var cpr = new L.tileLayer.wms("http://64.225.130.75/?map=/etc/mapserver/cyprus.map", {
     		layers: 'Cyprus',
     		format: 'image/png',
     		transparent: true,
