@@ -2,12 +2,12 @@ apiVersion: v1
 entries:
   CFmapserver:
   - apiVersion: v2
-    created: "2022-12-05T13:37:32.2322066+01:00"
+    created: "2022-12-23T09:53:27.2911421+01:00"
     description: 'MapServer on K8S with automated refresh of mapfiles from S3. '
-    digest: 7f6a370c63fd5edce0f164faff0bdc3416dd23906a33be864fe503816027fbe2
+    digest: c78054e6cd072faaf7a05baa30ffeff7b074a6bb5224b7c3f2cf316cefc9b0bc
     name: CFmapserver
     type: application
     urls:
     - CFmapserver-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-05T13:37:32.2309694+01:00"
+generated: "2022-12-23T09:53:27.2906517+01:00"

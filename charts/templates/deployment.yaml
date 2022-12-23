@@ -30,7 +30,7 @@ spec:
         volumeMounts:
         - name: "{{ .Release.Name }}-volume"
           mountPath: {{ .Values.image.mapFilesPath }}
-          # readOnly: true
+          readOnly: true
       initContainers:
       - name: "{{ .Release.Name }}-init"
         image: "{{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}"
