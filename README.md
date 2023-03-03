@@ -32,7 +32,7 @@ If the map files in the bucket change (e.g. are added, deleted or updated), a Ku
 * Install the chart:
 
     ```
-    helm install cfmapserver cfmapserver/CFmapserver -f my-values.yaml
+    helm install cfmapserver cfmapserver/CFmapserver -f my-values.yaml --namespace cfmapserver --create-namespace
     ```
 
 * Check that the service is running. The public IP assignment will take a couple minutes:
